@@ -4,7 +4,7 @@ import Data.Article.Author as Author exposing (Author)
 import Date exposing (Date)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
-import PostgRest
+import PostgRest as PG
 
 
 type alias Comment =
@@ -23,13 +23,13 @@ type CommentId
     = CommentId Int
 
 
-commentIdAttribute : String -> PostgRest.Attribute CommentId
+commentIdAttribute : String -> PG.Attribute CommentId
 commentIdAttribute name =
     let
         idToString (CommentId id) =
             toString id
     in
-    PostgRest.attribute
+    PG.attribute
         { decoder = Decode.map CommentId Decode.int
         , encoder = idToString >> Encode.string
         , urlEncoder = idToString

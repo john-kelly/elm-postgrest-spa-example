@@ -4,7 +4,7 @@ import Http
 import HttpBuilder exposing (RequestBuilder, withHeader)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
-import PostgRest
+import PostgRest as PG
 import Time
 
 
@@ -34,9 +34,9 @@ withAuthorization maybeToken builder =
             builder
 
 
-toAuthorizedHttpRequest : { timeout : Maybe Time.Time, token : Maybe AuthToken, url : String } -> PostgRest.Request a -> Http.Request a
+toAuthorizedHttpRequest : { timeout : Maybe Time.Time, token : Maybe AuthToken, url : String } -> PG.Request a -> Http.Request a
 toAuthorizedHttpRequest { timeout, token, url } request =
-    PostgRest.toHttpRequest
+    PG.toHttpRequest
         { timeout = timeout
         , token = Maybe.map (\(AuthToken str) -> str) token
         , url = url

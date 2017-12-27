@@ -25,7 +25,7 @@ import Json.Decode.Pipeline as Pipeline exposing (custom, decode, hardcoded, req
 import Json.Encode as Encode
 import Markdown
 import UrlParser
-import PostgRest
+import PostgRest as PG
 
 {-| An article, optionally with an article body.
 
@@ -80,9 +80,9 @@ slugToString : Slug -> String
 slugToString (Slug slug) =
     slug
 
-slugAttribute : String -> PostgRest.Attribute Slug
+slugAttribute : String -> PG.Attribute Slug
 slugAttribute name =
-    PostgRest.attribute
+    PG.attribute
         { decoder = Decode.map Slug Decode.string
         , encoder = slugToString >> Encode.string
         , urlEncoder = slugToString
@@ -108,9 +108,9 @@ tagDecoder =
     Decode.map Tag Decode.string
 
 
-tagAttribute : String -> PostgRest.Attribute Tag
+tagAttribute : String -> PG.Attribute Tag
 tagAttribute name =
-    PostgRest.attribute
+    PG.attribute
         { decoder = Decode.map Tag Decode.string
         , encoder = tagToString >> Encode.string
         , urlEncoder = tagToString
@@ -134,9 +134,9 @@ bodyToHtml (Body markdown) attributes =
     Markdown.toHtml attributes markdown
 
 
-bodyAttribute : String -> PostgRest.Attribute Body
+bodyAttribute : String -> PG.Attribute Body
 bodyAttribute name =
-    PostgRest.attribute
+    PG.attribute
         { decoder = Decode.map Body Decode.string
         , encoder = bodyToMarkdownString >> Encode.string
         , urlEncoder = bodyToMarkdownString
@@ -144,9 +144,9 @@ bodyAttribute name =
         name
 
 
-stringBodyAttribute : String -> PostgRest.Attribute String
+stringBodyAttribute : String -> PG.Attribute String
 stringBodyAttribute name =
-    PostgRest.attribute
+    PG.attribute
         { decoder = Decode.string
         , encoder = Encode.string
         , urlEncoder = identity

@@ -7,7 +7,7 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Decode.Pipeline as Pipeline exposing (decode, required)
 import Json.Encode as Encode exposing (Value)
 import Json.Encode.Extra as EncodeExtra
-import PostgRest
+import PostgRest as PG
 import UrlParser
 import Util exposing ((=>))
 
@@ -89,9 +89,9 @@ usernameToHtml (Username username) =
     Html.text username
 
 
-usernameAttribute : String -> PostgRest.Attribute Username
+usernameAttribute : String -> PG.Attribute Username
 usernameAttribute name =
-    PostgRest.attribute
+    PG.attribute
         { decoder = usernameDecoder
         , encoder = encodeUsername
         , urlEncoder = usernameToString

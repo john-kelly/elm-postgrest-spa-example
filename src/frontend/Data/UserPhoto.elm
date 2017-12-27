@@ -5,7 +5,7 @@ import Html.Attributes
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
 import Json.Encode.Extra as EncodeExtra
-import PostgRest
+import PostgRest as PG
 
 
 type UserPhoto
@@ -26,9 +26,9 @@ encode : UserPhoto -> Value
 encode (UserPhoto maybeUrl) =
     EncodeExtra.maybe Encode.string maybeUrl
 
-attribute : String -> PostgRest.Attribute UserPhoto
+attribute : String -> PG.Attribute UserPhoto
 attribute name =
-    PostgRest.attribute
+    PG.attribute
         { decoder = decoder
         , encoder = encode
         , urlEncoder = toMaybeString >> Maybe.withDefault "null"
