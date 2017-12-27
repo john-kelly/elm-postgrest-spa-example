@@ -155,8 +155,3 @@ stringBodyAttribute name =
 bodyToMarkdownString : Body -> String
 bodyToMarkdownString (Body markdown) =
     markdown
-
-
-bodyDecoder : Decoder Body
-bodyDecoder =
-    Decode.map Body Decode.string
