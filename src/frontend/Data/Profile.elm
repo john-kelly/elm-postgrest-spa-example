@@ -1,9 +1,7 @@
-module Data.Profile exposing (Profile, decoder)
+module Data.Profile exposing (Profile)
 
 import Data.User as User exposing (Username)
 import Data.UserPhoto as UserPhoto exposing (UserPhoto)
-import Json.Decode as Decode exposing (Decoder)
-import Json.Decode.Pipeline as Pipeline exposing (decode, required)
 
 
 type alias Profile =
@@ -12,12 +10,3 @@ type alias Profile =
     , image : UserPhoto
     , following : Bool
     }
-
-
-decoder : Decoder Profile
-decoder =
-    decode Profile
-        |> required "username" User.usernameDecoder
-        |> required "bio" (Decode.nullable Decode.string)
-        |> required "image" UserPhoto.decoder
-        |> required "following" Decode.bool

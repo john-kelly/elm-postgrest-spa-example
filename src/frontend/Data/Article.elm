@@ -8,8 +8,6 @@ module Data.Article
         , bodyAttribute
         , stringBodyAttribute
         , bodyToMarkdownString
-        , decoder
-        , decoderWithBody
         , slugParser
         , slugToString
         , slugAttribute
@@ -64,37 +62,6 @@ type alias Article a =
     , author : Author
     , body : a
     }
-
-
-
--- SERIALIZATION --
-
-
-decoder : Decoder (Article ())
-decoder =
-    baseArticleDecoder
-        |> hardcoded ()
-
-
-decoderWithBody : Decoder (Article Body)
-decoderWithBody =
-    baseArticleDecoder
-        |> required "body" bodyDecoder
-
-
-baseArticleDecoder : Decoder (a -> Article a)
-baseArticleDecoder =
-    decode Article
-        |> required "description" (Decode.map (Maybe.withDefault "") (Decode.nullable Decode.string))
-        |> required "slug" (Decode.map Slug Decode.string)
-        |> required "title" Decode.string
-        |> required "tagList" (Decode.list Decode.string)
-        |> required "createdAt" Json.Decode.Extra.date
-        |> required "updatedAt" Json.Decode.Extra.date
-        |> required "favorited" Decode.bool
-        |> required "favoritesCount" Decode.int
-        |> required "author" Author.decoder
-
 
 
 -- IDENTIFIERS --
