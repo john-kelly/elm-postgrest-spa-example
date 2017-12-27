@@ -26,6 +26,7 @@ encode : UserPhoto -> Value
 encode (UserPhoto maybeUrl) =
     EncodeExtra.maybe Encode.string maybeUrl
 
+
 attribute : String -> PG.Attribute UserPhoto
 attribute name =
     PG.attribute

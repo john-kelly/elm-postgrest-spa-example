@@ -1,12 +1,9 @@
 module Request.User exposing (edit, login, register, storeSession)
 
-import Data.AuthToken as AuthToken exposing (AuthToken, withAuthorization)
+import Data.AuthToken as AuthToken exposing (AuthToken)
 import Data.User as User exposing (User)
 import Http
-import HttpBuilder exposing (RequestBuilder, withExpect, withQueryParams)
-import Json.Decode as Decode
 import Json.Encode as Encode
-import Json.Encode.Extra as EncodeExtra
 import Ports
 import PostgRest as PG exposing ((&))
 import Request.Schema as Schema

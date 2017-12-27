@@ -1,12 +1,10 @@
 module Request.Profile exposing (get, toggleFollow)
 
-import Data.AuthToken as AuthToken exposing (AuthToken, withAuthorization)
+import Data.AuthToken as AuthToken exposing (AuthToken)
 import Data.Profile as Profile exposing (Profile)
 import Data.User as User exposing (Username)
 import Data.UserPhoto
 import Http
-import HttpBuilder exposing (RequestBuilder, withExpect, withQueryParams)
-import Json.Decode as Decode
 import PostgRest as PG exposing ((&))
 import Request.Schema as Schema
 

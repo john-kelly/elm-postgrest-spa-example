@@ -3,7 +3,7 @@ module Request.Article.Comments exposing (delete, list, post)
 import Data.Article as Article exposing (Article, Tag, slugToString)
 import Data.Article.Author exposing (Author)
 import Data.Article.Comment as Comment exposing (Comment, CommentId)
-import Data.AuthToken as AuthToken exposing (AuthToken, withAuthorization)
+import Data.AuthToken as AuthToken exposing (AuthToken)
 import Date
 import Http
 import HttpBuilder exposing (RequestBuilder, withExpect, withQueryParams)

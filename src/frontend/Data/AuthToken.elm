@@ -1,4 +1,4 @@
-module Data.AuthToken exposing (AuthToken, decoder, encode, withAuthorization, toAuthorizedHttpRequest)
+module Data.AuthToken exposing (AuthToken, decoder, encode, toAuthorizedHttpRequest)
 
 import Http
 import HttpBuilder exposing (RequestBuilder, withHeader)
@@ -21,17 +21,6 @@ decoder : Decoder AuthToken
 decoder =
     Decode.string
         |> Decode.map AuthToken
-
-
-withAuthorization : Maybe AuthToken -> RequestBuilder a -> RequestBuilder a
-withAuthorization maybeToken builder =
-    case maybeToken of
-        Just (AuthToken token) ->
-            builder
-                |> withHeader "authorization" ("Token " ++ token)
-
-        Nothing ->
-            builder
 
 
 toAuthorizedHttpRequest : { timeout : Maybe Time.Time, token : Maybe AuthToken, url : String } -> PG.Request a -> Http.Request a
