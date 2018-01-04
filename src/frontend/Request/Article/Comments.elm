@@ -64,10 +64,10 @@ selection : PG.Selection
     Comment
 selection =
     PG.succeed Comment
-        & PG.select .id
-        & PG.select .body
-        & PG.select .createdAt
-        & PG.select .updatedAt
+        & PG.field .id
+        & PG.field .body
+        & PG.field .createdAt
+        & PG.field .updatedAt
         & PG.embedOne .author Schema.profile Request.Article.Author.selection
 
 

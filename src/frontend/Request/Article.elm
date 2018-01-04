@@ -32,7 +32,7 @@ import Request.Schema as Schema
 get : Maybe AuthToken -> Article.Slug -> Http.Request (Article Body)
 get maybeToken slug =
     PG.readOne Schema.article
-        { select = selection (PG.select .body)
+        { select = selection (PG.field .body)
         , where_ = PG.eq slug .slug
         }
         |> AuthToken.toAuthorizedHttpRequest
@@ -135,7 +135,7 @@ feed config username token =
 tags : Http.Request (List Tag)
 tags =
     PG.readMany Schema.tag
-        { select = PG.select .name
+        { select = PG.field .name
         , where_ = PG.true
         , offset = Nothing
         , limit = Nothing
@@ -214,7 +214,7 @@ create config token =
             , PG.change .stringBody config.body
             , PG.change .tagStrings config.tags
             ]
-        , select = selection (PG.select .body)
+        , select = selection (PG.field .body)
         }
         |> AuthToken.toAuthorizedHttpRequest
             { url = "http://localhost:3000"
@@ -232,7 +232,7 @@ update slug config token =
             , PG.change .stringBody config.body
             ]
         , where_ = PG.eq slug .slug
-        , select = selection (PG.select .body)
+        , select = selection (PG.field .body)
         }
         |> AuthToken.toAuthorizedHttpRequest
             { url = "http://localhost:3000"
@@ -273,13 +273,13 @@ type alias Attributes other =
 selection : PG.Selection (Attributes other) body -> PG.Selection (Attributes other) (Article body)
 selection body =
     PG.succeed Article
-        & PG.select .description
-        & PG.select .slug
-        & PG.select .title
-        & PG.select .tagStrings
-        & PG.select .createdAt
-        & PG.select .updatedAt
-        & PG.select .favorited
-        & PG.select .favoritesCount
+        & PG.field .description
+        & PG.field .slug
+        & PG.field .title
+        & PG.field .tagStrings
+        & PG.field .createdAt
+        & PG.field .updatedAt
+        & PG.field .favorited
+        & PG.field .favoritesCount
         & PG.embedOne .author Schema.profile Request.Article.Author.selection
         & body

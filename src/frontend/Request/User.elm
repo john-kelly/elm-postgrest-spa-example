@@ -93,11 +93,11 @@ edit { username, email, bio, password, image } originalUsername token =
             ]
         , where_ = PG.eq originalUsername .name
         , select = PG.succeed User
-            & PG.select .email
+            & PG.field .email
             & PG.succeed token
-            & PG.select .name
-            & PG.select .bio
-            & PG.select .image
+            & PG.field .name
+            & PG.field .bio
+            & PG.field .image
         }
         |> AuthToken.toAuthorizedHttpRequest
             { url = "http://localhost:3000"

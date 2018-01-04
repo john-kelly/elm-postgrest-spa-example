@@ -72,7 +72,7 @@ selection : PG.Selection
     }
     Profile
 selection = PG.succeed Profile
-    & PG.select .name
-    & PG.select .bio
-    & PG.select .image
-    & PG.select .following
+    & PG.field .name
+    & PG.field .bio
+    & PG.field .image
+    & PG.field .following
