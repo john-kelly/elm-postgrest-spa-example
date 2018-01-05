@@ -27,7 +27,7 @@ module PostgRest
         , list
         , nullable
         , schema
-        , select
+        , field
         , embedOne
         , embedMany
         , succeed
@@ -52,6 +52,7 @@ module PostgRest
         , order
         , readOne
         , readMany
+        , readAll
         , readPage
         , updateOne
         , updateMany
@@ -160,6 +161,8 @@ type Selection attributes a
 type Request a
     = Read
         { parameters : Parameters
+        -- NOTE: if this becomes an expect + bool -- we can represent pagination
+        -- without a new case of the union. may or may not be a good idea.
         , decoder : Decode.Decoder a
         }
     | Update
@@ -1001,6 +1004,12 @@ true =
     BooleanCond True
 
 
+-- NOTE TODO: note to self in case that i forget. looking at http.extra gave me
+-- an idea of implementing false in a different way. we can just send an http request
+-- that always fails ('just send it to http://""' or something...) and then have an
+-- expect that always returns []. this is probably a better solution than a limit 1
+-- the only downside is that we are not actually hitting our postgrest endpoint...
+-- this is probably okay tho -- we just need to document this behavior well!
 false : Condition attributes
 false =
     BooleanCond False
@@ -1337,6 +1346,20 @@ readMany from { select, where_, offset, limit, order } =
             , decoder = Decode.list decoder
             }
 
+
+-- Added to improve learning curve of library. Another one we could add would
+-- be readFirst -> Request (Maybe a)
+readAll : Schema id attributes -> Selection attributes a -> Request (List a)
+readAll from select =
+    readMany from
+        { select = select
+        , where_ = true
+        , order = []
+        , offset = Nothing
+        , limit = Nothing
+        }
+
+
 -- FIXME: temp pagination solution
 readPage :
     Schema id attributes
@@ -1399,8 +1422,8 @@ readPage from { select, where_, size, page, order } =
             }
 
 
-select : (attributes -> Attribute a) -> Selection attributes a
-select getter =
+field : (attributes -> Attribute a) -> Selection attributes a
+field getter =
     Selection <|
         \attributes ->
             let
