@@ -706,8 +706,8 @@ hasNullable id =
 
 
 {-| -}
-schema : id -> String -> attributes -> Schema id attributes
-schema id name s =
+schema : String -> attributes -> Schema id attributes
+schema name s =
     Schema name s
 
 

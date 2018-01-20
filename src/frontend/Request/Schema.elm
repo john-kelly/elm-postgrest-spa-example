@@ -50,7 +50,7 @@ article :
         , author : PG.Relationship PG.HasOne Profile
         }
 article =
-    PG.schema Article "articles"
+    PG.schema "articles"
         { description = PG.string "description"
         , slug = Article.slugAttribute "slug"
         , title = PG.string "title"
@@ -72,7 +72,6 @@ article =
 type Profile = Profile
 
 
-
 profile :
     PG.Schema Profile
         { name : PG.Attribute User.Username
@@ -85,7 +84,7 @@ profile :
         , password : PG.Attribute String
         }
 profile =
-    PG.schema Profile "profiles"
+    PG.schema "profiles"
         { name = User.usernameAttribute "name"
         , nameString = PG.string "name"
         , email = PG.string "email"
@@ -111,7 +110,7 @@ comment :
         , article : PG.Relationship PG.HasOne Article
         }
 comment =
-    PG.schema Comment "comments"
+    PG.schema "comments"
         { id = Comment.commentIdAttribute "id"
         , body = PG.string "body"
         , createdAt = date "created_at"
@@ -132,7 +131,7 @@ follow :
         , followed : PG.Relationship PG.HasOne Profile
         }
 follow =
-    PG.schema Follow "follows"
+    PG.schema "follows"
         { followerName = User.usernameAttribute "follower_name"
         , follower = PG.hasOne_ "follower_name" Profile
         , followedName = User.usernameAttribute "followed_name"
@@ -149,7 +148,7 @@ favorite :
         , article : PG.Relationship PG.HasOne Article
         }
 favorite =
-    PG.schema Favorite "favorites"
+    PG.schema "favorites"
         { userName = User.usernameAttribute "user_name"
         , user = PG.hasOne_ "user_name" Profile
         , articleSlug = Article.slugAttribute "article_slug"
@@ -163,6 +162,6 @@ tag :
         { name : PG.Attribute Article.Tag
         }
 tag =
-    PG.schema Tag "tags"
+    PG.schema "tags"
         { name = Article.tagAttribute "name"
         }
