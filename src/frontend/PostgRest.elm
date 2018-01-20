@@ -14,7 +14,6 @@ module PostgRest
         , HasNullable
         , HasMany
         , hasOne
-        , hasOne_
         , hasNullable
         , hasMany
         , change
@@ -679,30 +678,25 @@ type HasNullable
 
 {-| -}
 type Relationship cardinality id
-    = Relationship (Maybe String)
+    = Relationship String
 
 
 {-| -}
-hasOne : id -> Relationship HasOne id
-hasOne id =
-    Relationship Nothing
-
-{-| FIXME: temp fix for https://github.com/begriffs/postgrest/pull/918 -}
-hasOne_ : String -> id -> Relationship HasOne id
-hasOne_ fk id =
-    Relationship (Just fk)
+hasOne : String -> Relationship HasOne id
+hasOne =
+    Relationship
 
 
 {-| -}
-hasMany : id -> Relationship HasMany id
-hasMany id =
-    Relationship Nothing
+hasMany : String -> Relationship HasMany id
+hasMany =
+    Relationship
 
 
 {-| -}
-hasNullable : id -> Relationship HasNullable id
-hasNullable id =
-    Relationship Nothing
+hasNullable : String -> Relationship HasNullable id
+hasNullable =
+    Relationship
 
 
 {-| -}
@@ -1452,11 +1446,8 @@ embedOne getRelationship (Schema schemaName attributes2) (Selection getSelection
     Selection <|
         \attributes1 ->
             let
-                (Relationship maybeFk) =
+                (Relationship fk) =
                     getRelationship attributes1
-
-                -- FIXME: temp fix for: https://github.com/begriffs/postgrest/pull/918
-                fk = Maybe.withDefault schemaName maybeFk
 
                 { attributeNames, embeds, decoder } =
                     getSelection attributes2
@@ -1490,10 +1481,8 @@ embedMany getRelationship (Schema schemaName attributes2) { select, where_, orde
     Selection <|
         \attributes1 ->
             let
-                (Relationship maybeFk) =
+                (Relationship fkOrThrough) =
                     getRelationship attributes1
-
-                fk = Maybe.withDefault "" (Maybe.map (\s -> "." ++ s) maybeFk)
 
                 (Selection getSelection) =
                     select
@@ -1511,7 +1500,7 @@ embedMany getRelationship (Schema schemaName attributes2) { select, where_, orde
 
                 parameters =
                     Parameters
-                        { schemaName = schemaName ++ fk
+                        { schemaName = schemaName ++ "." ++ fkOrThrough
                         , attributeNames = attributeNames
                         , cardinality = cardinality
                         }

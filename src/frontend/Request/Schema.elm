@@ -65,7 +65,7 @@ article =
         , favoritedBy = PG.list (User.usernameAttribute "favorited_by")
         , followedBy = PG.list (User.usernameAttribute "followed_by")
         , stringBody = Article.stringBodyAttribute "body"
-        , author = PG.hasOne_ "author_name" Profile
+        , author = PG.hasOne "author_name"
         }
 
 
@@ -116,9 +116,9 @@ comment =
         , createdAt = date "created_at"
         , updatedAt = date "updated_at"
         , authorName = PG.string "author_name"
-        , author = PG.hasOne_ "author_name" Profile
+        , author = PG.hasOne "author_name"
         , articleSlug = Article.slugAttribute "article_slug"
-        , article = PG.hasOne_ "article_slug" Article
+        , article = PG.hasOne "article_slug"
         }
 
 type Follow = Follow
@@ -133,9 +133,9 @@ follow :
 follow =
     PG.schema "follows"
         { followerName = User.usernameAttribute "follower_name"
-        , follower = PG.hasOne_ "follower_name" Profile
+        , follower = PG.hasOne "follower_name"
         , followedName = User.usernameAttribute "followed_name"
-        , followed = PG.hasOne_ "followed_name" Profile
+        , followed = PG.hasOne "followed_name"
         }
 
 type Favorite = Favorite
@@ -150,9 +150,9 @@ favorite :
 favorite =
     PG.schema "favorites"
         { userName = User.usernameAttribute "user_name"
-        , user = PG.hasOne_ "user_name" Profile
+        , user = PG.hasOne "user_name"
         , articleSlug = Article.slugAttribute "article_slug"
-        , article = PG.hasOne_ "article_slug" Article
+        , article = PG.hasOne "article_slug"
         }
 
 type Tag = Tag
