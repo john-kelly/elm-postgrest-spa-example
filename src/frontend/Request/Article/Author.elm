@@ -13,8 +13,8 @@ selection : Selection
         , name : PG.Attribute Data.User.Username
     }
     Author
-selection = PG.succeed Author
-    & PG.field .name
-    & PG.field .bio
-    & PG.field .image
-    & PG.field .following
+selection = PG.map4 Author
+    (PG.field .name)
+    (PG.field .bio)
+    (PG.field .image)
+    (PG.field .following)

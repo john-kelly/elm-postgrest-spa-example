@@ -63,12 +63,12 @@ selection : PG.Selection
     }
     Comment
 selection =
-    PG.succeed Comment
-        & PG.field .id
-        & PG.field .body
-        & PG.field .createdAt
-        & PG.field .updatedAt
-        & PG.embedOne .author Schema.profile Request.Article.Author.selection
+    PG.map5 Comment
+        (PG.field .id)
+        (PG.field .body)
+        (PG.field .createdAt)
+        (PG.field .updatedAt)
+        (PG.embedOne .author Schema.profile Request.Article.Author.selection)
 
 
 -- DELETE --

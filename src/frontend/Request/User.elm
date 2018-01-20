@@ -92,12 +92,12 @@ edit { username, email, bio, password, image } originalUsername token =
             , PG.change .imageMaybeString image
             ]
         , where_ = PG.eq originalUsername .name
-        , select = PG.succeed User
-            & PG.field .email
-            & PG.succeed token
-            & PG.field .name
-            & PG.field .bio
-            & PG.field .image
+        , select = PG.map5 User
+            (PG.field .email)
+            (PG.succeed token)
+            (PG.field .name)
+            (PG.field .bio)
+            (PG.field .image)
         }
         |> AuthToken.toAuthorizedHttpRequest
             { url = "http://localhost:3000"

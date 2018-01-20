@@ -71,8 +71,8 @@ selection : PG.Selection
         , name : PG.Attribute Username
     }
     Profile
-selection = PG.succeed Profile
-    & PG.field .name
-    & PG.field .bio
-    & PG.field .image
-    & PG.field .following
+selection = PG.map4 Profile
+    (PG.field .name)
+    (PG.field .bio)
+    (PG.field .image)
+    (PG.field .following)

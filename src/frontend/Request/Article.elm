@@ -273,13 +273,13 @@ type alias Attributes other =
 selection : PG.Selection (Attributes other) body -> PG.Selection (Attributes other) (Article body)
 selection body =
     PG.succeed Article
-        & PG.field .description
-        & PG.field .slug
-        & PG.field .title
-        & PG.field .tagStrings
-        & PG.field .createdAt
-        & PG.field .updatedAt
-        & PG.field .favorited
-        & PG.field .favoritesCount
-        & PG.embedOne .author Schema.profile Request.Article.Author.selection
-        & body
+        |> PG.andMap (PG.field .description)
+        |> PG.andMap (PG.field .slug)
+        |> PG.andMap (PG.field .title)
+        |> PG.andMap (PG.field .tagStrings)
+        |> PG.andMap (PG.field .createdAt)
+        |> PG.andMap (PG.field .updatedAt)
+        |> PG.andMap (PG.field .favorited)
+        |> PG.andMap (PG.field .favoritesCount)
+        |> PG.andMap (PG.embedOne .author Schema.profile Request.Article.Author.selection)
+        |> PG.andMap body
