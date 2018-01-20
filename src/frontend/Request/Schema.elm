@@ -31,6 +31,24 @@ date =
 
 type Article = Article
 
+article :
+    PG.Schema Article
+        { description : PG.Attribute String
+        , slug : PG.Attribute Article.Slug
+        , title : PG.Attribute String
+        , createdAt : PG.Attribute Date.Date
+        , updatedAt : PG.Attribute Date.Date
+        , favorited : PG.Attribute Bool
+        , favoritesCount : PG.Attribute Int
+        , authorName : PG.Attribute User.Username
+        , body : PG.Attribute Article.Body
+        , tagStrings : PG.Attribute (List String)
+        , tags : PG.Attribute (List Article.Tag)
+        , favoritedBy : PG.Attribute (List User.Username)
+        , followedBy : PG.Attribute (List User.Username)
+        , stringBody : PG.Attribute String
+        , author : PG.Relationship PG.HasOne Profile
+        }
 article =
     PG.schema Article "articles"
         { description = PG.string "description"
@@ -54,6 +72,18 @@ article =
 type Profile = Profile
 
 
+
+profile :
+    PG.Schema Profile
+        { name : PG.Attribute User.Username
+        , nameString : PG.Attribute String
+        , email : PG.Attribute String
+        , bio : PG.Attribute (Maybe String)
+        , image : PG.Attribute UserPhoto.UserPhoto
+        , imageMaybeString : PG.Attribute (Maybe String)
+        , following : PG.Attribute Bool
+        , password : PG.Attribute String
+        }
 profile =
     PG.schema Profile "profiles"
         { name = User.usernameAttribute "name"
@@ -69,6 +99,17 @@ profile =
 
 type Comment = Comment
 
+comment :
+    PG.Schema Comment
+        { id : PG.Attribute Comment.CommentId
+        , body : PG.Attribute String
+        , createdAt : PG.Attribute Date.Date
+        , updatedAt : PG.Attribute Date.Date
+        , authorName : PG.Attribute String
+        , author : PG.Relationship PG.HasOne Profile
+        , articleSlug : PG.Attribute Article.Slug
+        , article : PG.Relationship PG.HasOne Article
+        }
 comment =
     PG.schema Comment "comments"
         { id = Comment.commentIdAttribute "id"
@@ -83,6 +124,13 @@ comment =
 
 type Follow = Follow
 
+follow :
+    PG.Schema Follow
+        { followerName : PG.Attribute User.Username
+        , follower : PG.Relationship PG.HasOne Profile
+        , followedName : PG.Attribute User.Username
+        , followed : PG.Relationship PG.HasOne Profile
+        }
 follow =
     PG.schema Follow "follows"
         { followerName = User.usernameAttribute "follower_name"
@@ -93,6 +141,13 @@ follow =
 
 type Favorite = Favorite
 
+favorite :
+    PG.Schema Favorite
+        { userName : PG.Attribute User.Username
+        , user : PG.Relationship PG.HasOne Profile
+        , articleSlug : PG.Attribute Article.Slug
+        , article : PG.Relationship PG.HasOne Article
+        }
 favorite =
     PG.schema Favorite "favorites"
         { userName = User.usernameAttribute "user_name"
@@ -103,6 +158,10 @@ favorite =
 
 type Tag = Tag
 
+tag :
+    PG.Schema Tag
+        { name : PG.Attribute Article.Tag
+        }
 tag =
     PG.schema Tag "tags"
         { name = Article.tagAttribute "name"
