@@ -1528,34 +1528,142 @@ succeed a =
 
 
 andMap : Selection attributes a -> Selection attributes (a -> b) -> Selection attributes b
-andMap (Selection getSelectionA) (Selection getSelectionFn) =
+andMap =
+    map2 (|>)
+
+
+(&) : Selection attributes (a -> b) -> Selection attributes a -> Selection attributes b
+(&) =
+    flip andMap
+
+map : (a -> b) -> Selection attributes a -> Selection attributes b
+map fn (Selection getSelection) =
+    Selection <|
+        \attributes ->
+            let
+                selection =
+                    getSelection attributes
+            in
+            { selection | decoder = Decode.map fn selection.decoder }
+
+
+map2 : (a -> b -> c) -> Selection attributes a -> Selection attributes b -> Selection attributes c
+map2 fn (Selection getSelectionA) (Selection getSelectionB) =
     Selection <|
         \attributes ->
             let
                 selectionA =
                     getSelectionA attributes
 
-                selectionFn =
-                    getSelectionFn attributes
-
-                attributeNames =
-                    selectionA.attributeNames ++ selectionFn.attributeNames
-
-                embeds =
-                    selectionA.embeds ++ selectionFn.embeds
-
-                decoder =
-                    Decode.map2 (\fn a -> fn a) selectionFn.decoder selectionA.decoder
+                selectionB =
+                    getSelectionB attributes
             in
-                { attributeNames = attributeNames
-                , embeds = embeds
-                , decoder = decoder
-                }
+            { attributeNames = selectionA.attributeNames ++ selectionB.attributeNames
+            , embeds = selectionA.embeds ++ selectionB.embeds
+            , decoder = Decode.map2 fn selectionA.decoder selectionB.decoder
+            }
 
 
-(&) : Selection attributes (a -> b) -> Selection attributes a -> Selection attributes b
-(&) =
-    flip andMap
+map3 :
+    (a -> b -> c -> d)
+    -> Selection attributes a
+    -> Selection attributes b
+    -> Selection attributes c
+    -> Selection attributes d
+map3 fn selectionA selectionB selectionC =
+    map fn selectionA
+        |> andMap selectionB
+        |> andMap selectionC
+
+
+map4 :
+    (a -> b -> c -> d -> e)
+    -> Selection attributes a
+    -> Selection attributes b
+    -> Selection attributes c
+    -> Selection attributes d
+    -> Selection attributes e
+map4 fn selectionA selectionB selectionC selectionD =
+    map fn selectionA
+        |> andMap selectionB
+        |> andMap selectionC
+        |> andMap selectionD
+
+
+map5 :
+    (a -> b -> c -> d -> e -> f)
+    -> Selection attributes a
+    -> Selection attributes b
+    -> Selection attributes c
+    -> Selection attributes d
+    -> Selection attributes e
+    -> Selection attributes f
+map5 fn selectionA selectionB selectionC selectionD selectionE =
+    map fn selectionA
+        |> andMap selectionB
+        |> andMap selectionC
+        |> andMap selectionD
+        |> andMap selectionE
+
+
+map6 :
+    (a -> b -> c -> d -> e -> f -> g)
+    -> Selection attributes a
+    -> Selection attributes b
+    -> Selection attributes c
+    -> Selection attributes d
+    -> Selection attributes e
+    -> Selection attributes f
+    -> Selection attributes g
+map6 fn selectionA selectionB selectionC selectionD selectionE selectionF =
+    map fn selectionA
+        |> andMap selectionB
+        |> andMap selectionC
+        |> andMap selectionD
+        |> andMap selectionE
+        |> andMap selectionF
+
+
+map7 :
+    (a -> b -> c -> d -> e -> f -> g -> h)
+    -> Selection attributes a
+    -> Selection attributes b
+    -> Selection attributes c
+    -> Selection attributes d
+    -> Selection attributes e
+    -> Selection attributes f
+    -> Selection attributes g
+    -> Selection attributes h
+map7 fn selectionA selectionB selectionC selectionD selectionE selectionF selectionG =
+    map fn selectionA
+        |> andMap selectionB
+        |> andMap selectionC
+        |> andMap selectionD
+        |> andMap selectionE
+        |> andMap selectionF
+        |> andMap selectionG
+
+
+map8 :
+    (a -> b -> c -> d -> e -> f -> g -> h -> i)
+    -> Selection attributes a
+    -> Selection attributes b
+    -> Selection attributes c
+    -> Selection attributes d
+    -> Selection attributes e
+    -> Selection attributes f
+    -> Selection attributes g
+    -> Selection attributes h
+    -> Selection attributes i
+map8 fn selectionA selectionB selectionC selectionD selectionE selectionF selectionG selectionH =
+    map fn selectionA
+        |> andMap selectionB
+        |> andMap selectionC
+        |> andMap selectionD
+        |> andMap selectionE
+        |> andMap selectionF
+        |> andMap selectionG
+        |> andMap selectionH
 
 
 toHttpRequest : { timeout : Maybe Time.Time, token : Maybe String, url : String } -> Request a -> Http.Request a
