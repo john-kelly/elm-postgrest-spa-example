@@ -3,9 +3,9 @@ module Request.Article.Author exposing (selection)
 import Data.Article.Author exposing (Author)
 import Data.User
 import Data.UserPhoto
-import PostgRest as PG exposing (Selection, (&))
+import PostgRest as PG
 
-selection : Selection
+selection : PG.Selection
     { attribute
         | bio : PG.Attribute (Maybe String)
         , following : PG.Attribute Bool

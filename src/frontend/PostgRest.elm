@@ -40,7 +40,6 @@ module PostgRest
         , map7
         , map8
         , andMap
-        , (&)
         , like
         , eq
         , gte

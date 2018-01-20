@@ -5,7 +5,7 @@ import Data.User as User exposing (User)
 import Http
 import Json.Encode as Encode
 import Ports
-import PostgRest as PG exposing ((&))
+import PostgRest as PG
 import Request.Schema as Schema
 import Util exposing ((=>))
 

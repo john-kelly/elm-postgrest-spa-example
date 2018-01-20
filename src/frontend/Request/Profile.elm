@@ -5,7 +5,7 @@ import Data.Profile as Profile exposing (Profile)
 import Data.User as User exposing (Username)
 import Data.UserPhoto
 import Http
-import PostgRest as PG exposing ((&))
+import PostgRest as PG
 import Request.Schema as Schema
 
 

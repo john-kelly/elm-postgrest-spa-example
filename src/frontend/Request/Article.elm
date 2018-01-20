@@ -21,7 +21,7 @@ import Data.AuthToken as AuthToken exposing (AuthToken)
 import Data.User as User exposing (Username)
 import Date
 import Http
-import PostgRest as PG exposing ((&))
+import PostgRest as PG
 import Request.Article.Author
 import Request.Schema as Schema
 

@@ -9,7 +9,7 @@ import Http
 import HttpBuilder exposing (RequestBuilder, withExpect, withQueryParams)
 import Json.Decode as Decode
 import Json.Encode as Encode exposing (Value)
-import PostgRest as PG exposing ((&))
+import PostgRest as PG
 import Request.Article.Author
 import Request.Schema as Schema
 import Util exposing ((=>))
