@@ -1539,10 +1539,6 @@ andMap =
     map2 (|>)
 
 
-(&) : Selection attributes (a -> b) -> Selection attributes a -> Selection attributes b
-(&) =
-    flip andMap
-
 map : (a -> b) -> Selection attributes a -> Selection attributes b
 map fn (Selection getSelection) =
     Selection <|
