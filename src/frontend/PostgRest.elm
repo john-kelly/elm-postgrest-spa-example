@@ -1354,11 +1354,12 @@ readMany from { select, where_, offset, limit, order } =
 readFirst :
     Schema id attributes
     ->
-        { where_ : Condition attributes
-        , select : Selection attributes a
+        { select : Selection attributes a
+        , where_ : Condition attributes
+        , order : List (Order attributes)
         }
     -> Request (Maybe a)
-readFirst from { select, where_ } =
+readFirst from { select, where_, order } =
     let
         (Schema schemaName attributes) =
             from
@@ -1371,7 +1372,7 @@ readFirst from { select, where_ } =
 
         cardinality =
             Many
-                { order = Nothing
+                { order = ordersToMaybeParams attributes order
                 , where_ = conditionToParam attributes where_
                 , limit = Just 1
                 , offset = Nothing
