@@ -57,6 +57,7 @@ module PostgRest
         , nullable
         , order
         , readAll
+        , readFirst
         , readMany
         , readOne
         , readPage
@@ -139,8 +140,6 @@ change getAttribute val =
 
 batch : List (Changeset attributes) -> Changeset attributes
 batch values =
-    -- is batch the right word? i'm not sure how batch relates to the notion of
-    -- duplicates...
     Changeset <|
         \attributes ->
             values
@@ -1351,11 +1350,48 @@ readMany from { select, where_, offset, limit, order } =
         }
 
 
+{-| -}
+readFirst :
+    Schema id attributes
+    ->
+        { where_ : Condition attributes
+        , select : Selection attributes a
+        }
+    -> Request (Maybe a)
+readFirst from { select, where_ } =
+    let
+        (Schema schemaName attributes) =
+            from
 
--- Added to improve learning curve of library. Another one we could add would
--- be readFirst -> Request (Maybe a)
+        (Selection getSelection) =
+            select
+
+        { attributeNames, embeds, decoder } =
+            getSelection attributes
+
+        cardinality =
+            Many
+                { order = Nothing
+                , where_ = conditionToParam attributes where_
+                , limit = Just 1
+                , offset = Nothing
+                }
+
+        parameters =
+            Parameters
+                { schemaName = schemaName
+                , attributeNames = attributeNames
+                , cardinality = cardinality
+                }
+                embeds
+    in
+    Read
+        { parameters = parameters
+        , decoder = Decode.map List.head (Decode.list decoder)
+        }
 
 
+{-| -}
 readAll : Schema id attributes -> Selection attributes a -> Request (List a)
 readAll from select =
     readMany from
