@@ -186,7 +186,6 @@ type Request a
         , decoder : Decode.Decoder a
         }
     | Page
-        -- FIXME: temp pagination solution
         { parameters : Parameters
         , expect : Http.Expect a
         }
@@ -1361,7 +1360,6 @@ readAll from select =
         }
 
 
--- FIXME: temp pagination solution
 readPage :
     Schema id attributes
     ->
@@ -1406,8 +1404,8 @@ readPage from { select, where_, size, page, order } =
             let
                 countResult =
                     Dict.get "Content-Range" response.headers
-                        |> Result.fromMaybe "No Content-Range Header"
-                        |> Result.andThen (Regex.replace (Regex.All) (Regex.regex ".+\\/") (always "") >> Ok)
+                        |> Maybe.andThen (String.split "/" >> List.reverse >> List.head)
+                        |> Result.fromMaybe "Invalid Content-Range Header"
                         |> Result.andThen String.toInt
 
                 jsonResult =
@@ -1661,7 +1659,6 @@ map8 fn selectionA selectionB selectionC selectionD selectionE selectionF select
 toHttpRequest : { timeout : Maybe Time.Time, token : Maybe String, url : String } -> Request a -> Http.Request a
 toHttpRequest { url, timeout, token } request =
     let
-        -- FIXME: temp logic to support auth
         (authHeaders, withCredentials) =
             case token of
                 Just str -> ([Http.header "Authorization" ("Bearer " ++ str)], True)
@@ -1679,11 +1676,12 @@ toHttpRequest { url, timeout, token } request =
                 , withCredentials = withCredentials
                 }
 
-        -- FIXME: temp pagination solution
         Page { parameters, expect } ->
             Http.request
                 { method = "GET"
-                , headers = parametersToHeaders parameters ++ authHeaders ++ [ Http.header "Prefer" "count=exact" ]
+                , headers = parametersToHeaders parameters
+                    ++ authHeaders
+                    ++ [ Http.header "Prefer" "count=exact" ]
                 , url = parametersToUrl url parameters
                 , body = Http.emptyBody
                 , expect = expect
